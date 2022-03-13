@@ -1,0 +1,8 @@
+- The word "Ave" isn't read in because instead of <w:t> it uses something
+  like <w:t xml:space = "preserve"> which deals with whitespace or something.
+- Use switch case to deal with the keywords such as [Date], [Business Name]...
+- Make a keywords data structure so you can iterate through them in the switch case
+- Make Automatic Date retriever
+- Output changes by creating whole new file.
+-
+

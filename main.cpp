@@ -31,26 +31,35 @@ int main(){
 
 
     // Read and Parse XML file ---------------------------------------
-    std::string mainLine = "";
+    std::string mainLine;
     std::string line;
     std::string Start = "<w:t>";
     std::string End = "</w:t>";
     int i = 0;
-    std::getline(src2, line);
-    std::getline(src2, line);
-    mainLine = line;
-    while(mainLine.find(Start) != std::string::npos){
+    while(std::getline(src2, line)){ mainLine = mainLine + line;}
+    int S = 0;
+    while(mainLine.find(Start, S) != std::string::npos){
         i++;
         std::cout << i << std::endl;
         std::cout << "mainLine characters: " << mainLine.size() << std::endl;
-        int S = mainLine.find(Start);
-        int E = mainLine.find(End);
+        S = mainLine.find(Start, S);
+        int E = mainLine.find(End, S);
         std::cout << "Start: "  << S << std::endl;
         std::cout << "End: " << E << std::endl;
+
+        if("[Date]" == mainLine.substr(S + Start.size(), E - S - Start.size())){
+            std::cout << "Date found" << std::endl;
+            std::string Date = "March 12, 2022";
+            mainLine.erase(S + Start.size(), 6);
+            E = E - 6; // removed characters "[Date]"
+            mainLine.insert(S + Start.size(), Date);
+            E = E + Date.size();
+
+        }
+
         std::string text = mainLine.substr(S + Start.size(), E - S - Start.size());
         std::cout << "[" << text << "]" << std::endl;
-        mainLine = mainLine.substr(E + End.size());
-//        std::cout << "printing Mainline:\n" << mainLine << std::endl;
+        S = E + End.size(); // update position past what was read.
     }
 
 

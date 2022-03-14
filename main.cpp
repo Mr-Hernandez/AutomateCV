@@ -26,6 +26,15 @@ int main(){
     };
     // ---------------------------------------------------------------
 
+    // Get user input for keywords replacements
+    std::string businessName, location, positionTitle;
+    std::cout << "Enter the Business Name: ";
+    std::getline(std::cin >> std::ws, businessName);
+    std::cout << "Enter location as \"City, State\":";
+    std::getline(std::cin >> std::ws, location);
+    std::cout << "Enter Position Title: ";
+    std::getline(std::cin >> std::ws, positionTitle);
+
     // Open document.xml file in the zip -----------------------------
     std::ifstream src2;
     src2.open("document.xml");
@@ -65,13 +74,13 @@ int main(){
                     stringInsert = getTime();
                 }
                 else if("[Business Name]" == itr){
-                    stringInsert = "AmaGooDex";
+                    stringInsert = businessName;
                 }
                 else if("[City], [State]" == itr){
-                    stringInsert = "Denver, CO";
+                    stringInsert = location;
                 }
                 else if("[Position Title]" == itr){
-                    stringInsert = "RF Engineer";
+                    stringInsert = positionTitle;
                 }
                 mainLine.erase(S + Start.size(), itr.size());
                 E = E - itr.size(); // removed characters "[Date]" or w/e
@@ -98,6 +107,14 @@ int main(){
     // is in a zipped folder so could make a script outside that can do that
     // or use some zipping library to unzip and then zip back up.
     // ---------------------------------------------------------------
+
+    // Call batch file to unzip file----------------------------------
+    system("automatecv.bat");
+    // consider using CreateProcess() to call the batch file since I
+    // hear that it is better in some ways. look into it.
+    // also consider making the batch file from here.
+    // ---------------------------------------------------------------
+
 
     // take job ad input
     return 0;

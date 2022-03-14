@@ -2,7 +2,11 @@
 #include <iostream>
 #include <stdio.h>
 #include <sstream>
+#include <vector>
+#include <ctime> // for getting date
+#include <sstream>
 
+std::string getTime();
 int main(){
     // take file location as full path
     // 7zip source code to uncompress and compress
@@ -47,15 +51,42 @@ int main(){
         std::cout << "Start: "  << S << std::endl;
         std::cout << "End: " << E << std::endl;
 
-        if("[Date]" == mainLine.substr(S + Start.size(), E - S - Start.size())){
-            std::cout << "Date found" << std::endl;
-            std::string Date = "March 12, 2022";
-            mainLine.erase(S + Start.size(), 6);
-            E = E - 6; // removed characters "[Date]"
-            mainLine.insert(S + Start.size(), Date);
-            E = E + Date.size();
+        std::vector<std::string> keywords;
+        keywords.push_back("[Date]");
+        keywords.push_back("[Business Name]");
+        keywords.push_back("[City], [State]");
+        keywords.push_back("[Position Title]");
 
+        for(auto itr: keywords){
+            if(itr == mainLine.substr(S + Start.size(), E - S - Start.size())){
+                std::cout << itr << " found" << std::endl;
+                std::string stringInsert;
+                if("[Date]" == itr){
+                    stringInsert = getTime();
+                }
+                else if("[Business Name]" == itr){
+                    stringInsert = "AmaGooDex";
+                }
+                else if("[City], [State]" == itr){
+                    stringInsert = "Denver, CO";
+                }
+                else if("[Position Title]" == itr){
+                    stringInsert = "RF Engineer";
+                }
+                mainLine.erase(S + Start.size(), itr.size());
+                E = E - itr.size(); // removed characters "[Date]" or w/e
+                mainLine.insert(S + Start.size(), stringInsert);
+                E = E + stringInsert.size();
+            }
         }
+//        if("[Date]" == mainLine.substr(S + Start.size(), E - S - Start.size())){
+//            std::cout << "Date found" << std::endl;
+//            std::string Date = "March 12, 2022";
+//            mainLine.erase(S + Start.size(), 6);
+//            E = E - 6; // removed characters "[Date]"
+//            mainLine.insert(S + Start.size(), Date);
+//            E = E + Date.size();
+//        }
 
         std::string text = mainLine.substr(S + Start.size(), E - S - Start.size());
         std::cout << "[" << text << "]" << std::endl;
@@ -70,4 +101,33 @@ int main(){
 
     // take job ad input
     return 0;
+}
+
+// Return the date as string in form "month day, year"
+std::string getTime(){
+    time_t now = time(0);
+    char* d = ctime(&now);
+    std::string dt(d);
+    std::string day, month, year;
+    std::stringstream word(dt);
+    word >> month;
+    word >> month;
+    word >> day;
+    word >> year;
+    word >> year;
+
+    if("Jan" == month){ month = "January";}
+    else if("Feb" == month){ month = "February";}
+    else if("Mar" == month){ month = "March";}
+    else if("Apr" == month){ month = "April";}
+    else if("Jun" == month){ month = "June";}
+    else if("Jul" == month){ month = "July";}
+    else if("Aug" == month){ month = "August";}
+    else if("Sep" == month){ month = "September";}
+    else if("Oct" == month){ month = "October";}
+    else if("Nov" == month){ month = "November";}
+    else if("Dec" == month){ month = "December";}
+
+    return (month + " " + day + ", " + year);
+
 }

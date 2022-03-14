@@ -4,5 +4,9 @@
 - Make a keywords data structure so you can iterate through them in the switch case
 - Make Automatic Date retriever
 - Output changes by creating whole new file.
--
+- dayname month day time year
+- scrubbing a website seems like more work than it is worth.
+- editing the excel table with new jobs applied to would be great.
+- For now I will go with manually inputting some data.
+- Still need to do zipping and unzipping.
 

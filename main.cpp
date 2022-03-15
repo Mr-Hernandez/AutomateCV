@@ -1,9 +1,27 @@
+// Project Name: Automate CV
+// Author: Mr.Hernandez
+// Date: 3/15/2022
+// Supported OS: Windows 10
+// Developed in Code::Blocks 20.03
+// gcc (x86_64-posix-seh-rev0, Built by MinGW-W64 project) 8.1.0
+// Windows 10
+
+// Description: ------------------------------------------------------
+// This program searches for a docx file named "cv_template.docx" in
+// the same directory as the .exe file. It unzips it and reads in the
+// document.xml file in the unzipped folder's word subdirectery. Then
+// it searches for all text between <w:t> and </w:t> and if the only
+// text between a pair of these delimiters matches a keyword
+// (including the brackets), then it replaces that keyword with the
+// appropriate string. We get the string at the start of the program
+// by getting user input.
+// -------------------------------------------------------------------
+
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
-#include <sstream>
 #include <vector>
-#include <ctime> // for getting date
+#include <ctime>
 #include <sstream>
 
 std::string getTime();
@@ -22,17 +40,13 @@ int main(){
     // ---------------------------------------------------------------
 
 
-    // take file location as full path
-    // 7zip source code to uncompress and compress
-    //
-
     // make copy of file ---------------------------------------------
     std::ifstream src("cv_template.docx", std::ios::binary);
     std::ofstream dst("moddedFile.zip", std::ios::binary);
     dst << src.rdbuf();
     src.close();
-
     // ---------------------------------------------------------------
+
 
     // rename the file to zip file------------------------------------
     dst.close(); // make sure file is closed before renaming
@@ -40,6 +54,7 @@ int main(){
         std::cout << "Rename Successful" << std::endl;
     };
     // ---------------------------------------------------------------
+
 
     // Call batch file to unzip file----------------------------------
     system("unzipper.bat");
@@ -62,17 +77,11 @@ int main(){
     std::string line;
     std::string Start = "<w:t>";
     std::string End = "</w:t>";
-    int i = 0;
     while(std::getline(src2, line)){ mainLine = mainLine + line;}
     int S = 0;
     while(mainLine.find(Start, S) != std::string::npos){
-        i++;
-        std::cout << i << std::endl;
-        std::cout << "mainLine characters: " << mainLine.size() << std::endl;
         S = mainLine.find(Start, S);
         int E = mainLine.find(End, S);
-        std::cout << "Start: "  << S << std::endl;
-        std::cout << "End: " << E << std::endl;
 
         std::vector<std::string> keywords;
         keywords.push_back("[Date]");
@@ -102,13 +111,11 @@ int main(){
                 E = E + stringInsert.size();
             }
         }
-
-        std::string text = mainLine.substr(S + Start.size(), E - S - Start.size());
-        std::cout << "[" << text << "]" << std::endl;
         S = E + End.size(); // update position past what was read.
-
     }
     src2.close();
+    // ---------------------------------------------------------------
+
 
     // Create output file --------------------------------------------
     if(std::remove("moddedFile/word/document.xml") != 0){
@@ -120,9 +127,12 @@ int main(){
     outFile.close();
     // ---------------------------------------------------------------
 
-    // Zip the file back up to get a zip folder
+
+    // Zip the file back up to get a zip folder-----------------------
     std::remove("moddedFile.zip");
     system("zipper.bat");
+    // ---------------------------------------------------------------
+
 
     // Rename the new zip to docx ------------------------------------
     outputName = outputName + ".docx";
@@ -131,17 +141,9 @@ int main(){
     if(rename("moddedFile.zip", cOutputName)){
     std::cout << "Rename Successful" << std::endl;
     };
-
-
-    // use xml parser move file out, but I can't read in if the file
-    // is in a zipped folder so could make a script outside that can do that
-    // or use some zipping library to unzip and then zip back up.
     // ---------------------------------------------------------------
 
-
-
-
-    // take job ad input
+    std::cout << "Process Complete" << std::endl;
     return 0;
 }
 

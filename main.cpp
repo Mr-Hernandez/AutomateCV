@@ -8,14 +8,29 @@
 
 std::string getTime();
 int main(){
+
+    // Get user input for keywords replacements ----------------------
+    std::string businessName, location, positionTitle, outputName;
+    std::cout << "Enter the output name of the document: ";
+    std::getline(std::cin >> std::ws, outputName);
+    std::cout << "Enter the Business Name: ";
+    std::getline(std::cin >> std::ws, businessName);
+    std::cout << "Enter location as \"City, State\":";
+    std::getline(std::cin >> std::ws, location);
+    std::cout << "Enter Position Title: ";
+    std::getline(std::cin >> std::ws, positionTitle);
+    // ---------------------------------------------------------------
+
+
     // take file location as full path
     // 7zip source code to uncompress and compress
     //
 
     // make copy of file ---------------------------------------------
-    std::ifstream src("generalFile.docx", std::ios::binary);
-    std::ofstream dst("moddedFile.docx", std::ios::binary);
+    std::ifstream src("cv_template.docx", std::ios::binary);
+    std::ofstream dst("moddedFile.zip", std::ios::binary);
     dst << src.rdbuf();
+    src.close();
 
     // ---------------------------------------------------------------
 
@@ -26,20 +41,19 @@ int main(){
     };
     // ---------------------------------------------------------------
 
-    // Get user input for keywords replacements
-    std::string businessName, location, positionTitle;
-    std::cout << "Enter the Business Name: ";
-    std::getline(std::cin >> std::ws, businessName);
-    std::cout << "Enter location as \"City, State\":";
-    std::getline(std::cin >> std::ws, location);
-    std::cout << "Enter Position Title: ";
-    std::getline(std::cin >> std::ws, positionTitle);
+    // Call batch file to unzip file----------------------------------
+    system("unzipper.bat");
+    // consider using CreateProcess() to call the batch file since I
+    // hear that it is better in some ways. look into it.
+    // also consider making the batch file from here.
+    // ---------------------------------------------------------------
 
     // Open document.xml file in the zip -----------------------------
     std::ifstream src2;
-    src2.open("document.xml");
+    src2.open("moddedFile/word/document.xml");
     if(src2.is_open()){ std::cout << "document.xml opened" << std::endl;}
-    else { std::cout << "error, document.xml could not be opened" << std::endl;}
+    else { std::cout << "error, document.xml could not be opened" << std::endl;
+        return 0;}
     // ---------------------------------------------------------------
 
 
@@ -88,19 +102,34 @@ int main(){
                 E = E + stringInsert.size();
             }
         }
-//        if("[Date]" == mainLine.substr(S + Start.size(), E - S - Start.size())){
-//            std::cout << "Date found" << std::endl;
-//            std::string Date = "March 12, 2022";
-//            mainLine.erase(S + Start.size(), 6);
-//            E = E - 6; // removed characters "[Date]"
-//            mainLine.insert(S + Start.size(), Date);
-//            E = E + Date.size();
-//        }
 
         std::string text = mainLine.substr(S + Start.size(), E - S - Start.size());
         std::cout << "[" << text << "]" << std::endl;
         S = E + End.size(); // update position past what was read.
+
     }
+    src2.close();
+
+    // Create output file --------------------------------------------
+    if(std::remove("moddedFile/word/document.xml") != 0){
+        std::cout << "error deleting document.xml" << std::endl;
+    }
+    std::ofstream outFile;
+    outFile.open("moddedFile/word/document.xml");
+    outFile << mainLine;
+    outFile.close();
+    // ---------------------------------------------------------------
+
+    // Zip the file back up to get a zip folder
+    std::remove("moddedFile.zip");
+    system("zipper.bat");
+
+    // Rename the new zip to docx ------------------------------------
+    outputName = outputName + ".docx";
+    char* cOutputName = &outputName[0];
+    if(rename("moddedFile.zip", cOutputName)){
+    std::cout << "Rename Successful" << std::endl;
+    };
 
 
     // use xml parser move file out, but I can't read in if the file
@@ -108,12 +137,7 @@ int main(){
     // or use some zipping library to unzip and then zip back up.
     // ---------------------------------------------------------------
 
-    // Call batch file to unzip file----------------------------------
-    system("automatecv.bat");
-    // consider using CreateProcess() to call the batch file since I
-    // hear that it is better in some ways. look into it.
-    // also consider making the batch file from here.
-    // ---------------------------------------------------------------
+
 
 
     // take job ad input

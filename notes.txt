@@ -9,4 +9,17 @@
 - editing the excel table with new jobs applied to would be great.
 - For now I will go with manually inputting some data.
 - Still need to do zipping and unzipping.
+- Got it working for only for my file.
+- The issue is that this algorithm expects each keyword [keyword] to be
+  in its own sepeart <w:t>[keyword]</w:t> containers. xml can split words up
+  into different <w:t> brackets for a bunch of random reasons so it makes
+  editing the docx template trouble some as it might change how the words are
+  split up.
+- A solution to this might be to simply be to iterate through the input stream
+  and gather all the text inside <w:t> objects, no, then I wouldn't be able to
+  remake the xml file.
+- Another solution could be to open the document.xml file and just manually fix
+  and words that aren't set up right. Usually there is just a space between.
+  Really I'm not sure how to handle this issue, but for right now I got my
+  template set up to work.
 

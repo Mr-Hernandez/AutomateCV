@@ -127,6 +127,7 @@ int main(){
     // Rename the new zip to docx ------------------------------------
     outputName = outputName + ".docx";
     char* cOutputName = &outputName[0];
+    std::remove(cOutputName);
     if(rename("moddedFile.zip", cOutputName)){
     std::cout << "Rename Successful" << std::endl;
     };

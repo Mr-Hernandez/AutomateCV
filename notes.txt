@@ -22,4 +22,16 @@
   and words that aren't set up right. Usually there is just a space between.
   Really I'm not sure how to handle this issue, but for right now I got my
   template set up to work.
+- To make the .exe file run outside of code::blocks I added some lines to the
+  "other linker options", these were,
+  -static
+  -static-libgcc
+  -static-libstdc++
+  -lwinpthread
+  Code::Blocks then asked if I wanted to add the compiler flags and I clicked yes.
+  Now the first three options don't show up in the other linker options list but
+  lwinpthread is still there.
+- Look up what it means that a compiler flag was added because I added the -static
+  and the others to the "other linker options" list.
+
 
